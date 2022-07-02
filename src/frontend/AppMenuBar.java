@@ -3,7 +3,7 @@ package frontend;
 import javafx.scene.control.*;
 
 import java.util.Optional;
-
+//el menu del costaado
 public class AppMenuBar extends MenuBar {
 
     public AppMenuBar() {

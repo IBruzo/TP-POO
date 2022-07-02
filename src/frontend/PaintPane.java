@@ -12,6 +12,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
+//TODO chequear los ifs
+
 public class PaintPane extends BorderPane {
 
 	// BackEnd
@@ -130,7 +132,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
-
+       //mueve las figuras cuando drageas, medio raro las mueve
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -172,7 +174,7 @@ public class PaintPane extends BorderPane {
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
-
+	//es medio raro q redrawcanvas() so usa mucho
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for(Figure figure : canvasState.figures()) {

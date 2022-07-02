@@ -3,7 +3,7 @@ package frontend;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
-
+//la barra de abajo
 public class StatusPane extends BorderPane {
 
 	private final Label statusLabel;
