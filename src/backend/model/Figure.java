@@ -55,4 +55,6 @@ public abstract class Figure {
     }
 
     public abstract void move(double diffX,double diffY);
+
+    public abstract boolean isInFigure(Point eventPoint);
 }

@@ -31,4 +31,12 @@ public class Ellipse extends Figure {
     public void move(double diffX, double diffY) {
         setCenterPoint(new Point(getCenterPoint().getX()-diffX,getCenterPoint().getY()-diffY));
     }
+
+    @Override
+    public boolean isInFigure(Point eventPoint) {
+        return ((Math.pow(eventPoint.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
+                (Math.pow(eventPoint.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))) <= 0.30;
+    }
+
+
 }
