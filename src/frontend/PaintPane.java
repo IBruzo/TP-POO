@@ -3,6 +3,7 @@ package frontend;
 import backend.CanvasState;
 import backend.model.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,6 +11,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 //TODO chequear los ifs
@@ -33,6 +35,10 @@ public class PaintPane extends BorderPane {
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 
+	//botonoes barra arriba
+	ToggleButton undoButton = new ToggleButton("Deshacer");
+	ToggleButton reDoButton= new ToggleButton("Rehacer");
+
 	// Dibujar una figura
 	Point startPoint;
 
@@ -41,6 +47,8 @@ public class PaintPane extends BorderPane {
 
 	// StatusBar
 	StatusPane statusPane;
+
+
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
@@ -52,6 +60,23 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+
+		ToggleButton[] toolsUndo ={undoButton,reDoButton};
+		ToggleGroup undoTools = new ToggleGroup();
+		for(ToggleButton undoTool : toolsUndo){
+			undoTool.setMinWidth(90);
+			undoTool.setToggleGroup(undoTools);
+			undoTool.setCursor(Cursor.HAND);
+		}
+
+		HBox undoBar = new HBox(10);
+		undoBar.setAlignment(Pos.CENTER);
+		undoBar.setStyle("-fx-background-color: #999");
+		undoBar.getChildren().addAll(toolsUndo);
+		undoBar.setPadding(new Insets(2));
+		undoBar.setPrefHeight(30);
+		gc.setLineWidth(1);
+
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
 		buttonsBox.setPadding(new Insets(5));
@@ -152,6 +177,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		setTop(undoBar);
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
