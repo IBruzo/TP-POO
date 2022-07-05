@@ -13,10 +13,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
+import javafx.scene.text.*;
 
 //TODO chequear los ifs
 
 public class PaintPane extends BorderPane {
+
+
 
 	// BackEnd
 	CanvasState canvasState;
@@ -24,8 +29,11 @@ public class PaintPane extends BorderPane {
 	// Canvas y relacionados
 	Canvas canvas = new Canvas(800, 600);
 	GraphicsContext gc = canvas.getGraphicsContext2D();
-	Color lineColor = Color.BLACK;
-	Color fillColor = Color.YELLOW;
+	private static final Color LINE_COLOR = Color.BLACK;
+	private static final Color FILL_COLOR = Color.YELLOW;
+	private static final int DEF_MIN_SLIDER = 1;
+	private static final int DEF_MAX_SLIDER = 50;
+	private static final int DEF_INCREMENT_SLIDER = 1;
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
@@ -34,6 +42,17 @@ public class PaintPane extends BorderPane {
 	ToggleButton squareButton = new ToggleButton("Cuadrado");
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
+
+	//Slider Grosor de Borde
+	Text sliderText = new Text("Borde");
+	Slider slider = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
+
+	//Colorpickers
+	ColorPicker edgePicker = new ColorPicker(LINE_COLOR);
+	Text fillText = new Text("Relleno");
+	ColorPicker fillPicker = new ColorPicker(FILL_COLOR);
+
+
 
 	//botonoes barra arriba
 	ToggleButton undoButton = new ToggleButton("Deshacer");
@@ -61,9 +80,9 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 
-		ToggleButton[] toolsUndo ={undoButton,reDoButton};
+		ToggleButton[] toolsUndo = {undoButton, reDoButton};
 		ToggleGroup undoTools = new ToggleGroup();
-		for(ToggleButton undoTool : toolsUndo){
+		for (ToggleButton undoTool : toolsUndo) {
 			undoTool.setMinWidth(90);
 			undoTool.setToggleGroup(undoTools);
 			undoTool.setCursor(Cursor.HAND);
@@ -83,6 +102,18 @@ public class PaintPane extends BorderPane {
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
+
+
+		slider.setShowTickMarks(true);
+		slider.setShowTickLabels(true);
+		slider.setMajorTickUnit(25);
+		slider.setBlockIncrement(5);
+		slider.setCursor(Cursor.HAND);
+		edgePicker.setCursor(Cursor.HAND);
+		fillText.setCursor(Cursor.HAND);
+		buttonsBox.getChildren().addAll(sliderText, slider, edgePicker, fillText, fillPicker);
+
+
 
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
@@ -188,9 +219,9 @@ public class PaintPane extends BorderPane {
 			if(figure == selectedFigure) {
 				gc.setStroke(Color.RED);
 			} else {
-				gc.setStroke(lineColor);
+				gc.setStroke(LINE_COLOR);
 			}
-			gc.setFill(fillColor);
+			gc.setFill(FILL_COLOR);
 			if(figure instanceof Rectangle) {
 				Rectangle rectangle = (Rectangle) figure;
 				gc.fillRect(rectangle.getTopLeft().getX(), rectangle.getTopLeft().getY(),
