@@ -2,7 +2,6 @@ package backend.model;
 
 public class Point {
 
-    //TODO cambiar privadas despues de editar el paintpane
     private double x, y;
 
     public Point(double x, double y) {
@@ -17,6 +16,12 @@ public class Point {
     public double getY() {
         return y;
     }
+
+    public void movePoint(double x, double y){
+        this.x+=x;
+        this.y+=y;
+    }
+
 
     @Override
     public String toString() {

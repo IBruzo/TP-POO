@@ -8,14 +8,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Slider;
 import javafx.scene.text.*;
 
 //TODO chequear los ifs
@@ -56,8 +53,8 @@ public class PaintPane extends BorderPane {
 
 
 	//botonoes barra arriba
-	ToggleButton undoButton = new ToggleButton("Deshacer");
-	ToggleButton reDoButton= new ToggleButton("Rehacer");
+	Button undoButton = new Button("Deshacer");
+	Button reDoButton= new Button("Rehacer");
 
 	// Dibujar una figura
 	Point startPoint;
@@ -81,11 +78,10 @@ public class PaintPane extends BorderPane {
 			tool.setCursor(Cursor.HAND);
 		}
 
-		ToggleButton[] toolsUndo = {undoButton, reDoButton};
+		Button[] toolsUndo = {undoButton, reDoButton};
 		ToggleGroup undoTools = new ToggleGroup();
-		for (ToggleButton undoTool : toolsUndo) {
+		for (Button undoTool : toolsUndo) {
 			undoTool.setMinWidth(90);
-			undoTool.setToggleGroup(undoTools);
 			undoTool.setCursor(Cursor.HAND);
 		}
 
@@ -197,6 +193,7 @@ public class PaintPane extends BorderPane {
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				if(selectedFigure!=null)
 				     selectedFigure.getFigureBack().move(diffX,diffY);
+				startPoint.movePoint(diffX,diffY);
 				redrawCanvas();
 			}
 		});
