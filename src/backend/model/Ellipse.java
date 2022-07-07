@@ -4,7 +4,7 @@ public class Ellipse extends Figure {
 
     protected final double sMayorAxis, sMinorAxis;
 
-    public Ellipse(Point centerPoint, double sMayorAxis, double sMinorAxis) {
+    public Ellipse(Point centerPoint, Double sMayorAxis, Double sMinorAxis) {
         super(centerPoint);
         this.sMayorAxis = sMayorAxis;
         this.sMinorAxis = sMinorAxis;
