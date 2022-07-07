@@ -215,7 +215,12 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
-
+		slider.setOnMouseReleased(e->{
+			if(selectedFigure!=null){
+				selectedFigure.setEdgeWidth(slider.getValue());
+				redrawCanvas();
+			}
+		});
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {

@@ -16,6 +16,9 @@ public abstract class FrontFigures {
         this.edgeWidth = edgeWidth;
     }
 
+    //TODO metodo default para no repetir tanto codigo en los draw
+    // (me genera desconfiaza no poder usar el draw del rectangulo para el draw del cuadrado -Bruzo)
+
     public Figure getFigureBack() {
         return figureBack;
     }

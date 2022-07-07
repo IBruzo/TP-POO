@@ -21,6 +21,7 @@ public class CircleFront extends FrontFigures {
         Circle circle = (Circle) figureBack;
         gc.setFill(this.fillColor);
         gc.setStroke(selected);
+        gc.setLineWidth(edgeWidth);
         double diameter = circle.getRadius() * 2;
         gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
         gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
