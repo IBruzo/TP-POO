@@ -1,12 +1,13 @@
 package frontend.FrontFigure;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import backend.model.Figure;
 
-public class FrontFigures {
-    private final Figure figureBack;
-    private Color fillColor;
-    private Color edgeColor;
-    private Double edgeWidth;
+public abstract class FrontFigures {
+    protected final Figure figureBack;
+    protected Color fillColor;
+    protected Color edgeColor;
+    protected Double edgeWidth;
 
     public FrontFigures(Figure figure, Color fillColor, Color edgeColor, Double edgeWidth) {
         this.figureBack = figure;
@@ -14,4 +15,6 @@ public class FrontFigures {
         this.edgeColor = edgeColor;
         this.edgeWidth = edgeWidth;
     }
+
+    public abstract void draw(GraphicsContext gc);
 }

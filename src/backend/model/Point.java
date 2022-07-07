@@ -3,7 +3,7 @@ package backend.model;
 public class Point {
 
     //TODO cambiar privadas despues de editar el paintpane
-    public double x, y;
+    private double x, y;
 
     public Point(double x, double y) {
         this.x = x;

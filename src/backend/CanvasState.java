@@ -1,23 +1,24 @@
 package backend;
 
 import backend.model.Figure;
+import frontend.FrontFigure.FrontFigures;
 
 import java.util.ArrayList;
 import java.util.List;
 //solo maneja las figuras q tiene el canvas para ver si estan o no
 public class CanvasState {
 
-    private final List<Figure> list = new ArrayList<>();
+    private final List<FrontFigures> list = new ArrayList<>();
 
-    public void addFigure(Figure figure) {
+    public void addFigure(FrontFigures figure) {
         list.add(figure);
     }
 
-    public void deleteFigure(Figure figure) {
+    public void deleteFigure(FrontFigures figure) {
         list.remove(figure);
     }
 
-    public Iterable<Figure> figures() {
+    public Iterable<FrontFigures> figures() {
         return new ArrayList<>(list);
     }
 

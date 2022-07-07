@@ -3,8 +3,10 @@ import backend.model.Point;
 import backend.model.Square;
 import javafx.scene.paint.Color;
 
-public class SquareFront extends FrontFigures {
+public class SquareFront extends RectangleFront {
     public SquareFront(Point topLeft, Double size, Color fillColor, Color edgeColor, Double edgeWidth) {
         super(new Square(topLeft, size), fillColor, edgeColor, edgeWidth);
     }
+
+    public void draw() {}
 }
