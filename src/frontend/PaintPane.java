@@ -2,7 +2,7 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.FrontFigure.FrontFigures;
+import frontend.FrontFigure.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -63,7 +63,7 @@ public class PaintPane extends BorderPane {
 	Point startPoint;
 
 	// Seleccionar una figura
-	Figure selectedFigure;
+	FrontFigures selectedFigure;
 
 	// StatusBar
 	StatusPane statusPane;
@@ -128,21 +128,21 @@ public class PaintPane extends BorderPane {
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
-			Figure newFigure = null;
+			FrontFigures newFigure = null;
 			if(rectangleButton.isSelected()) {
-				newFigure = new Rectangle(startPoint, endPoint);
+				newFigure = new RectangleFront(startPoint, endPoint,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
 			}
 			else if(circleButton.isSelected()) {
 				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Circle(startPoint, circleRadius);
+				newFigure = new CircleFront(startPoint, circleRadius,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
 			} else if(squareButton.isSelected()) {
 				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new Square(startPoint, size);
+				newFigure = new SquareFront(startPoint, size,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
 			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.x + startPoint.x) / 2, (Math.abs((endPoint.y + startPoint.y)) / 2));
-				double sMayorAxis = Math.abs(endPoint.x - startPoint.x);
-				double sMinorAxis = Math.abs(endPoint.y - startPoint.y);
-				newFigure = new Ellipse(centerPoint, sMayorAxis, sMinorAxis);
+				Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
+				double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
+				double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
+				newFigure = new EllipseFront(centerPoint, sMayorAxis, sMinorAxis,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
 			} else {
 				return ;
 			}
@@ -155,8 +155,8 @@ public class PaintPane extends BorderPane {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
 			StringBuilder label = new StringBuilder();
-			for(Figure figure : canvasState.figures()) {
-				if(figure.isInFigure(eventPoint)) {
+			for(FrontFigures figure : canvasState.figures()) {
+				if(figure.getFigureBack().isInFigure(eventPoint)) {
 					found = true;
 					label.append(figure.toString());
 				}
@@ -173,8 +173,8 @@ public class PaintPane extends BorderPane {
 				Point eventPoint = new Point(event.getX(), event.getY());
 				boolean found = false;
 				StringBuilder label = new StringBuilder("Se seleccionó: ");
-				for (Figure figure : canvasState.figures()) {
-					if(figure.isInFigure(eventPoint)) {
+				for (FrontFigures figure : canvasState.figures()) {
+					if(figure.getFigureBack().isInFigure(eventPoint)) {
 						found = true;
 						selectedFigure = figure;
 						label.append(figure.toString());
@@ -196,10 +196,26 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				if(selectedFigure!=null)
-				     selectedFigure.move(diffX,diffY);
+				     selectedFigure.getFigureBack().move(diffX,diffY);
 				redrawCanvas();
 			}
 		});
+
+		fillPicker.setOnAction(e->{
+			if(selectedFigure!=null) {
+				selectedFigure.setFillColor(fillPicker.getValue());
+				redrawCanvas();
+			}
+		});
+
+		edgePicker.setOnAction(e->{
+			if(selectedFigure!=null){
+				selectedFigure.setEdgeColor(edgePicker.getValue());
+				redrawCanvas();
+			}
+		});
+
+
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
@@ -213,30 +229,16 @@ public class PaintPane extends BorderPane {
 		setLeft(buttonsBox);
 		setRight(canvas);
 	}
-	//es medio raro q redrawcanvas() se usa mucho
+
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-		for(FrontFigures figure : canvasState.figures()) {
-			if(figure == selectedFigure) {
-				gc.setStroke(Color.RED);
+		for (FrontFigures figure : canvasState.figures()) {
+			if (figure == selectedFigure) {
+				figure.draw(gc,Color.RED);
 			} else {
-				gc.setStroke(LINE_COLOR);
+				figure.draw(gc);
 			}
-			gc.setFill(FILL_COLOR);
-			figure.draw(gc);
-			/* if(figure instanceof Circle) {
-				Circle circle = (Circle) figure;
-				double diameter = circle.getRadius() * 2;
-				gc.fillOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-				gc.strokeOval(circle.getCenterPoint().getX() - circle.getRadius(), circle.getCenterPoint().getY() - circle.getRadius(), diameter, diameter);
-			} else if(figure instanceof Square) {
-				Square square = (Square) figure;
-				gc.fillRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
-						Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
-				gc.strokeRect(square.getTopLeft().getX(), square.getTopLeft().getY(),
-						Math.abs(square.getTopLeft().getX() - square.getBottomRight().getX()), Math.abs(square.getTopLeft().getY() - square.getBottomRight().getY()));
-		} */
+		}
 	}
-
 
 }
