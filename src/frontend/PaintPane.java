@@ -2,8 +2,7 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
-import frontend.DeshacerYRehacer.Instructions;
-import frontend.DeshacerYRehacer.UndoRedo;
+import frontend.Instruction.*;
 import frontend.FrontFigure.*;
 import frontend.figureButtons.*;
 import javafx.geometry.Insets;
@@ -17,10 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 //TODO chequear los ifs
 
@@ -97,14 +92,16 @@ public class PaintPane extends BorderPane {
 		ToggleGroup undoTools = new ToggleGroup();
 		for (Button undoTool : toolsUndo) {
 			undoTool.setMinWidth(90);
+			undoTool.setAlignment(Pos.CENTER);
 			undoTool.setCursor(Cursor.HAND);
 		}
 
 		HBox undoBar = new HBox(10);
 		undoBar.setAlignment(Pos.CENTER);
+		undoBar.setSpacing(5);
 		undoBar.setStyle("-fx-background-color: #999");
-		undoBar.getChildren().addAll(toolsUndo);
-		undoBar.setPadding(new Insets(2));
+		undoBar.getChildren().addAll(undoRedo.getUndoLabel(),undoButton,reDoButton,undoRedo.getRedoLabel());
+		undoBar.setPadding(new Insets(4));
 		undoBar.setPrefHeight(30);
 		gc.setLineWidth(1);
 
@@ -123,6 +120,7 @@ public class PaintPane extends BorderPane {
 		slider.setCursor(Cursor.HAND);
 		edgePicker.setCursor(Cursor.HAND);
 		fillText.setCursor(Cursor.HAND);
+
 		buttonsBox.getChildren().addAll(sliderText, slider, edgePicker, fillText, fillPicker);
 		buttonsBox.getChildren().add(expandButton);
 		buttonsBox.getChildren().add(minimizeButton);
@@ -145,11 +143,15 @@ public class PaintPane extends BorderPane {
 			FrontFigures newFigure=null;
 			for(FigureButton button : figureButtons ){
 				if(button.isSelected()){
-					newFigure=button.makeFigure(startPoint,endPoint,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
+					newFigure=button.makeFigure(startPoint,endPoint,fillPicker.getValue(),edgePicker.getValue(),slider.getValue(),canvasState.size());
+					undoRedo.addUndo(new Dibujar(newFigure,canvasState));
 				}
 			}
-			if(newFigure!=null)
+			if(newFigure!=null) {
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				canvasState.addFigure(newFigure);
+			}
 
 			startPoint = null;
 			redrawCanvas();
@@ -208,14 +210,20 @@ public class PaintPane extends BorderPane {
 
 		fillPicker.setOnAction(e->{
 			if(selectedFigure!=null) {
+				undoRedo.addUndo(new FillColor( selectedFigure,selectedFigure.getFillColor(),fillPicker.getValue()));
 				selectedFigure.setFillColor(fillPicker.getValue());
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 		});
 
 		edgePicker.setOnAction(e->{
 			if(selectedFigure!=null){
+				undoRedo.addUndo(new EdgeColor(selectedFigure,selectedFigure.getEdgeColor(),edgePicker.getValue()));
 				selectedFigure.setEdgeColor(edgePicker.getValue());
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 		});
@@ -223,13 +231,18 @@ public class PaintPane extends BorderPane {
 		slider.setOnMouseReleased(e->{
 			if(selectedFigure!=null){
 				selectedFigure.setEdgeWidth(slider.getValue());
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 		});
 
 		expandButton.setOnAction(event ->{
 			if(selectedFigure!= null){
+				undoRedo.addUndo(new Agrandar(selectedFigure));
 				selectedFigure.getFigureBack().changeSize(1.1);
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 
@@ -237,20 +250,39 @@ public class PaintPane extends BorderPane {
 
 		minimizeButton.setOnAction(actionEvent -> {
 			if(selectedFigure!=null){
+				undoRedo.addUndo(new Achicar(selectedFigure));
 				selectedFigure.getFigureBack().changeSize(0.9);
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 		});
 
 		undoButton.setOnAction(event->{
-			Instructions instruction= undoRedo.undo();
+			if(undoRedo.canUndo()) {
+				Instruction instruction = undoRedo.undo();
+				instruction.undo();
+				undoRedo.changeLabels();
+				redrawCanvas();
+			}
+		});
 
+		reDoButton.setOnAction(event->{
+			if(undoRedo.canRedo()) {
+				Instruction instruction = undoRedo.redo();
+				instruction.redo();
+				undoRedo.changeLabels();
+				redrawCanvas();
+			}
 		});
 
 		deleteButton.setOnAction(event -> {
 			if (selectedFigure != null) {
 				canvasState.deleteFigure(selectedFigure);
+				undoRedo.addUndo(new Borrar(selectedFigure,canvasState));
 				selectedFigure = null;
+				undoRedo.getRedo().clear();
+				undoRedo.changeLabels();
 				redrawCanvas();
 			}
 		});
@@ -263,11 +295,11 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (FrontFigures figure : canvasState.figures()) {
-			if (figure == selectedFigure) {
-				figure.draw(gc,Color.RED);
-			} else {
-				figure.draw(gc);
-			}
+				if (figure == selectedFigure) {
+					figure.draw(gc, Color.RED);
+				} else {
+					figure.draw(gc);
+				}
 		}
 	}
 

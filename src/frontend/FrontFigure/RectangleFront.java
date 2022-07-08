@@ -6,8 +6,8 @@ import javafx.scene.paint.Color;
 import java.awt.*;
 
 public class RectangleFront extends FrontFigures {
-    public RectangleFront(Point topLeft, Point bottomRight, Color fillColor, Color edgeColor, Double edgeWidth) {
-        super(new Rectangle(topLeft, bottomRight), fillColor, edgeColor, edgeWidth);
+    public RectangleFront(Point topLeft, Point bottomRight, Color fillColor, Color edgeColor, Double edgeWidth, int index) {
+        super(new Rectangle(topLeft, bottomRight), fillColor, edgeColor, edgeWidth,index);
     }
 
 

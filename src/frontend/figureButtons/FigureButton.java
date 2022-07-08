@@ -13,5 +13,5 @@ public abstract class FigureButton extends ToggleButton {
         super(name);
     }
 
-    public abstract FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider);
+    public abstract FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider,int index);
 }

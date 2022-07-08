@@ -14,7 +14,7 @@ public class RectangleButton extends FigureButton {
     }
 
     @Override
-    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider) {
-      return new RectangleFront(startPoint, endPoint,fillColor,edgeColor,slider);
+    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider, int index) {
+      return new RectangleFront(startPoint, endPoint,fillColor,edgeColor,slider,index);
     }
 }

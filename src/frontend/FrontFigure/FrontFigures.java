@@ -8,12 +8,14 @@ public abstract class FrontFigures {
     protected Color fillColor;
     protected Color edgeColor;
     protected Double edgeWidth;
+    private final int index;
 
-    public FrontFigures(Figure figure, Color fillColor, Color edgeColor, Double edgeWidth) {
+    public FrontFigures(Figure figure, Color fillColor, Color edgeColor, Double edgeWidth, int index) {
         this.figureBack = figure;
         this.fillColor = fillColor;
         this.edgeColor = edgeColor;
         this.edgeWidth = edgeWidth;
+        this.index=index;
     }
 
     //TODO metodo default para no repetir tanto codigo en los draw
@@ -21,6 +23,18 @@ public abstract class FrontFigures {
 
     public Figure getFigureBack() {
         return figureBack;
+    }
+
+    public Color getFillColor() {
+        return fillColor;
+    }
+
+    public Color getEdgeColor() {
+        return edgeColor;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public  abstract void draw(GraphicsContext gc, Color selected);

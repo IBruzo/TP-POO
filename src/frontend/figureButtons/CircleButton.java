@@ -12,8 +12,8 @@ public class CircleButton extends FigureButton {
     }
 
     @Override
-    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider) {
+    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider, int index){
         double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-        return new CircleFront(startPoint, circleRadius,fillColor,edgeColor,slider);
+        return new CircleFront(startPoint, circleRadius,fillColor,edgeColor,slider,index);
     }
 }

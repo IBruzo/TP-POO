@@ -12,8 +12,8 @@ public class SquareButton extends FigureButton {
     }
 
     @Override
-    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider) {
+    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider, int index) {
         double size = Math.abs(endPoint.getX() - startPoint.getX());
-        return new SquareFront(startPoint, size,fillColor,edgeColor,slider);
+        return new SquareFront(startPoint, size,fillColor,edgeColor,slider,index);
     }
 }

@@ -12,10 +12,10 @@ public class EllipseButton extends FigureButton {
     }
 
     @Override
-    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider) {
+    public FrontFigures makeFigure(Point startPoint, Point endPoint, Color fillColor, Color edgeColor, Double slider, int index) {
         Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
         double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
         double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-        return new EllipseFront(centerPoint, sMayorAxis, sMinorAxis,fillColor,edgeColor,slider);
+        return new EllipseFront(centerPoint, sMayorAxis, sMinorAxis,fillColor,edgeColor,slider,index);
     }
 }
