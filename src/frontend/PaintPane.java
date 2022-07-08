@@ -40,6 +40,8 @@ public class PaintPane extends BorderPane {
 	ToggleButton squareButton = new ToggleButton("Cuadrado");
 	ToggleButton ellipseButton = new ToggleButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
+	Button expandButton = new Button("Agrandar");
+	Button minimizeButton = new Button("Achicar");
 
 	//Slider Grosor de Borde
 	Text sliderText = new Text("Borde");
@@ -77,6 +79,10 @@ public class PaintPane extends BorderPane {
 			tool.setToggleGroup(tools);
 			tool.setCursor(Cursor.HAND);
 		}
+		minimizeButton.setMinWidth(90);
+		expandButton.setMinWidth(90);
+		minimizeButton.setCursor(Cursor.HAND);
+		expandButton.setCursor(Cursor.HAND);
 
 		Button[] toolsUndo = {undoButton, reDoButton};
 		ToggleGroup undoTools = new ToggleGroup();
@@ -95,7 +101,7 @@ public class PaintPane extends BorderPane {
 
 		VBox buttonsBox = new VBox(10);
 		buttonsBox.getChildren().addAll(toolsArr);
-		buttonsBox.setPadding(new Insets(5));
+		buttonsBox.setPadding(new Insets(6));
 		buttonsBox.setStyle("-fx-background-color: #999");
 		buttonsBox.setPrefWidth(100);
 		gc.setLineWidth(1);
@@ -109,7 +115,8 @@ public class PaintPane extends BorderPane {
 		edgePicker.setCursor(Cursor.HAND);
 		fillText.setCursor(Cursor.HAND);
 		buttonsBox.getChildren().addAll(sliderText, slider, edgePicker, fillText, fillPicker);
-
+		buttonsBox.getChildren().add(expandButton);
+		buttonsBox.getChildren().add(minimizeButton);
 
 
 		canvas.setOnMousePressed(event -> {
@@ -215,6 +222,21 @@ public class PaintPane extends BorderPane {
 		slider.setOnMouseReleased(e->{
 			if(selectedFigure!=null){
 				selectedFigure.setEdgeWidth(slider.getValue());
+				redrawCanvas();
+			}
+		});
+
+		expandButton.setOnAction(event ->{
+			if(selectedFigure!= null){
+				selectedFigure.getFigureBack().changeSize(1.1);
+				redrawCanvas();
+			}
+
+		});
+
+		minimizeButton.setOnAction(actionEvent -> {
+			if(selectedFigure!=null){
+				selectedFigure.getFigureBack().changeSize(0.9);
 				redrawCanvas();
 			}
 		});

@@ -2,7 +2,7 @@ package backend.model;
 
 public class Ellipse extends Figure {
 
-    protected final double sMayorAxis, sMinorAxis;
+    protected double sMayorAxis, sMinorAxis;
 
     public Ellipse(Point centerPoint, Double sMayorAxis, Double sMinorAxis) {
         super(centerPoint);
@@ -29,7 +29,7 @@ public class Ellipse extends Figure {
 
     @Override
     public void move(double diffX, double diffY) {
-        setCenterPoint(new Point(getCenterPoint().getX()-diffX,getCenterPoint().getY()-diffY));
+        setCenterPoint(new Point(getCenterPoint().getX()+diffX,getCenterPoint().getY()+diffY));
     }
 
     @Override
@@ -38,5 +38,9 @@ public class Ellipse extends Figure {
                 (Math.pow(eventPoint.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))) <= 0.30;
     }
 
-
+    @Override
+    public void changeSize(double amount) {
+            sMayorAxis*=amount;
+            sMinorAxis*=amount;
+    }
 }
