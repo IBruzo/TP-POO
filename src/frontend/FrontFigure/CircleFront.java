@@ -11,6 +11,12 @@ public class CircleFront extends FrontFigures {
         super(new Circle(centerPoint, radius), fillColor, edgeColor, edgeWidth);
     }
 
+
+    @Override
+    public String toString() {
+        return "Circulo";
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
         draw(gc,edgeColor);

@@ -17,7 +17,7 @@ public class Square extends Rectangle {
 
     @Override
     public String toString() {
-        return String.format("Cuadrado [ %s , %s ] center:%s", getTopLeft(), getBottomRight(), getCenterPoint());
+        return String.format("Cuadrado [ %s , %s ]", getTopLeft(), getBottomRight());
     }
 
 }

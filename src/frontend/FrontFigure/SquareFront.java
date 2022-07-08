@@ -10,9 +10,15 @@ public class SquareFront extends FrontFigures {
     }
 
 
+    @Override
+    public String toString() {
+        return "Cuadrado";
+    }
+
     public void draw(GraphicsContext gc) {
       draw(gc,edgeColor);
     }
+
     public void draw(GraphicsContext gc, Color selected){
         Square square = (Square) figureBack;
         gc.setFill(this.fillColor);

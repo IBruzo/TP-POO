@@ -14,6 +14,11 @@ public class EllipseFront extends FrontFigures {
     }
 
     @Override
+    public String toString() {
+        return "Elipse";
+    }
+
+    @Override
     public void draw(GraphicsContext gc, Color selected) {
         Ellipse ellipse = (Ellipse) figureBack;
         gc.setFill(this.fillColor);

@@ -10,6 +10,12 @@ public class RectangleFront extends FrontFigures {
         super(new Rectangle(topLeft, bottomRight), fillColor, edgeColor, edgeWidth);
     }
 
+
+    @Override
+    public String toString() {
+        return "Rectangulo";
+    }
+
     public void draw(GraphicsContext gc) {
         draw(gc,edgeColor);
     }

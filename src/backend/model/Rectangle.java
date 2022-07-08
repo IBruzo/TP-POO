@@ -28,7 +28,7 @@ public class Rectangle extends Figure {
 
     @Override
     public String toString() {
-        return String.format("Rectángulo [ %s , %s ] center: %s", topLeft, bottomRight, getCenterPoint());
+        return String.format("Rectángulo [ %s , %s ]", topLeft, bottomRight);
     }
 
     public void setCenterPoint(Point topLeft, Point bottomRight){

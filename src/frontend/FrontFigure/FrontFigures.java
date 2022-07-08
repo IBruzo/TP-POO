@@ -38,8 +38,4 @@ public abstract class FrontFigures {
         this.edgeWidth = edgeWidth;
     }
 
-    @Override
-    public String toString() {
-        return figureBack.toString();
-    }
 }

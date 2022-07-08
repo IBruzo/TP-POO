@@ -2,7 +2,10 @@ package frontend;
 
 import backend.CanvasState;
 import backend.model.*;
+import frontend.DeshacerYRehacer.Instructions;
+import frontend.DeshacerYRehacer.UndoRedo;
 import frontend.FrontFigure.*;
+import frontend.figureButtons.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,6 +17,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 //TODO chequear los ifs
 
@@ -35,10 +42,10 @@ public class PaintPane extends BorderPane {
 
 	// Botones Barra Izquierda
 	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	ToggleButton rectangleButton = new ToggleButton("Rectángulo");
-	ToggleButton circleButton = new ToggleButton("Círculo");
-	ToggleButton squareButton = new ToggleButton("Cuadrado");
-	ToggleButton ellipseButton = new ToggleButton("Elipse");
+	FigureButton rectangleButton = new RectangleButton("Rectángulo");
+	FigureButton circleButton = new CircleButton("Círculo");
+	FigureButton squareButton = new SquareButton("Cuadrado");
+	FigureButton ellipseButton = new EllipseButton("Elipse");
 	ToggleButton deleteButton = new ToggleButton("Borrar");
 	Button expandButton = new Button("Agrandar");
 	Button minimizeButton = new Button("Achicar");
@@ -66,6 +73,8 @@ public class PaintPane extends BorderPane {
 
 	// StatusBar
 	StatusPane statusPane;
+
+	UndoRedo undoRedo= new UndoRedo();
 
 
 
@@ -131,29 +140,21 @@ public class PaintPane extends BorderPane {
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
 				return ;
 			}
-			FrontFigures newFigure = null;
-			if(rectangleButton.isSelected()) {
-				newFigure = new RectangleFront(startPoint, endPoint,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
+			FigureButton[] figureButtons ={ rectangleButton, circleButton, squareButton, ellipseButton};
+
+			FrontFigures newFigure=null;
+			for(FigureButton button : figureButtons ){
+				if(button.isSelected()){
+					newFigure=button.makeFigure(startPoint,endPoint,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
+				}
 			}
-			else if(circleButton.isSelected()) {
-				double circleRadius = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new CircleFront(startPoint, circleRadius,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
-			} else if(squareButton.isSelected()) {
-				double size = Math.abs(endPoint.getX() - startPoint.getX());
-				newFigure = new SquareFront(startPoint, size,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
-			} else if(ellipseButton.isSelected()) {
-				Point centerPoint = new Point(Math.abs(endPoint.getX() + startPoint.getX()) / 2, (Math.abs((endPoint.getY() + startPoint.getY())) / 2));
-				double sMayorAxis = Math.abs(endPoint.getX() - startPoint.getX());
-				double sMinorAxis = Math.abs(endPoint.getY() - startPoint.getY());
-				newFigure = new EllipseFront(centerPoint, sMayorAxis, sMinorAxis,fillPicker.getValue(),edgePicker.getValue(),slider.getValue());
-			} else {
-				return ;
-			}
-			canvasState.addFigure(newFigure);
+			if(newFigure!=null)
+				canvasState.addFigure(newFigure);
+
 			startPoint = null;
 			redrawCanvas();
 		});
-
+  //TODO sacar el flag muy imperativo
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -161,7 +162,7 @@ public class PaintPane extends BorderPane {
 			for(FrontFigures figure : canvasState.figures()) {
 				if(figure.getFigureBack().isInFigure(eventPoint)) {
 					found = true;
-					label.append(figure.toString());
+					label.append(figure.getFigureBack());
 				}
 			}
 			if(found) {
@@ -180,7 +181,7 @@ public class PaintPane extends BorderPane {
 					if(figure.getFigureBack().isInFigure(eventPoint)) {
 						found = true;
 						selectedFigure = figure;
-						label.append(figure.toString());
+						label.append(figure.getFigureBack());
 					}
 				}
 				if (found) {
@@ -192,7 +193,7 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
-       //mueve las figuras cuando drageas, medio raro las mueve
+
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -239,6 +240,11 @@ public class PaintPane extends BorderPane {
 				selectedFigure.getFigureBack().changeSize(0.9);
 				redrawCanvas();
 			}
+		});
+
+		undoButton.setOnAction(event->{
+			Instructions instruction= undoRedo.undo();
+
 		});
 
 		deleteButton.setOnAction(event -> {
