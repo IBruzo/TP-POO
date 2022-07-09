@@ -37,7 +37,7 @@ public abstract class Figure {
 
     /**
      * cambia el tamaño respecto del centro de las figuras
-     * @param amount
+     * @param amount lo que se agrando o se achica dependiendo si es mayor o menor a 0
      */
     public abstract void changeSize(double amount);
 }

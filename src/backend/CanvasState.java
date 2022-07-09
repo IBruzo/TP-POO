@@ -13,6 +13,12 @@ public class CanvasState {
         list.add(figure);
     }
 
+    /**
+     * agrega en determinado indice de la lista la figura
+     * si la lista esta en 0 solo lo agraga a la lista
+     * @param index
+     * @param figure
+     */
     public void setFigure(int index ,FrontFigures figure) {
         if(list.size()==0)
             addFigure(figure);

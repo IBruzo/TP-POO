@@ -2,6 +2,8 @@ package frontend.Instruction;
 
 import frontend.FrontFigure.FrontFigures;
 
+
+//como Agrandar es lo opuesto a Achicar la extendimos para reeeutilizar el comportamineto de las clases, swichando el undo y redo
 public class Agrandar extends Achicar{
 
     public Agrandar(FrontFigures figureState) {

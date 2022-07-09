@@ -27,17 +27,13 @@ public class UndoRedo {
     /**
      * cada ves q se ejecuta una instruccion en el PaintPane se gurada en el stack de undo
      * para poder revertirla y pasarsela al stack de redo
-     * @param insta
+     * @param insta instruccion que se uso en la figura
      */
     public void addUndo(Instruction insta){
         undo.push(insta);
     }
 
-    public Deque<Instruction> getRedo() {
-        return redo;
-    }
-
-// estas figuras se pasan entre si  las instrucciones
+// estas funciones se pasan entre si  las instrucciones
     public Instruction undo(){
         Instruction aux= undo.pop();
             redo.push(aux);
@@ -66,6 +62,12 @@ public class UndoRedo {
     }
     public boolean canRedo(){
         return redo.size()!=0;
+    }
+
+    //getters
+
+    public Deque<Instruction> getRedo() {
+        return redo;
     }
 
     public Label getUndoLabel() {

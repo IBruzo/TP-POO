@@ -3,6 +3,7 @@ package frontend.Instruction;
 import backend.CanvasState;
 import frontend.FrontFigure.FrontFigures;
 
+//como borrar es lo opuesto a dibujar la extendimos para reeeutilizar el comportamineto de las clases, swichando el undo y redo
 public class Borrar extends Dibujar{
 
 

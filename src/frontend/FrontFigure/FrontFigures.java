@@ -23,7 +23,7 @@ public abstract class FrontFigures {
     /**
      * sirve para no ir repitiendo codigo en cada una de las figuras de front
      * @param gc
-     * @param selected
+     * @param selected color seleccionado en el picker para cambiar el color del borde
      */
 
     public void changeGraphics(GraphicsContext gc, Color selected){

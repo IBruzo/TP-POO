@@ -42,6 +42,11 @@ public class PaintPane extends BorderPane {
 	private final Button expandButton = new Button("Agrandar");
 	private final Button minimizeButton = new Button("Achicar");
 
+	//constantes ligadas al achicar y agrandar
+	private  final Text sizeText = new Text("Cambiar Tamaño");
+	private static final double AGRANDAR_10=1.1;
+	private static final double ACHICAR_10=0.9;
+
 	//Slider Grosor de Borde
 	private  final Text sliderText = new Text("Borde");
 	private final Slider slider = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
@@ -67,11 +72,13 @@ public class PaintPane extends BorderPane {
 	private UndoRedo undoRedo= new UndoRedo();
 
 
-
+    //maneja lo que es botones, acciones y layout del canvas
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
+
+		//esta primera parte es el layout de los botnes y las boxes
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton,  squareButton, ellipseButton,circleButton, deleteButton};
+		ToggleButton[] toolsArr = {selectionButton, deleteButton, rectangleButton,  squareButton, ellipseButton,circleButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -84,7 +91,6 @@ public class PaintPane extends BorderPane {
 		expandButton.setCursor(Cursor.HAND);
 
 		Button[] toolsUndo = {undoButton, reDoButton};
-		ToggleGroup undoTools = new ToggleGroup();
 		for (Button undoTool : toolsUndo) {
 			undoTool.setMinWidth(90);
 			undoTool.setAlignment(Pos.CENTER);
@@ -116,15 +122,15 @@ public class PaintPane extends BorderPane {
 		edgePicker.setCursor(Cursor.HAND);
 		fillText.setCursor(Cursor.HAND);
 
-		buttonsBox.getChildren().addAll(sliderText, slider, edgePicker, fillText, fillPicker);
-		buttonsBox.getChildren().add(expandButton);
-		buttonsBox.getChildren().add(minimizeButton);
+		buttonsBox.getChildren().addAll(sliderText, slider, edgePicker, fillText, fillPicker,sizeText,expandButton,minimizeButton);
 
-
+		//actualiza el startpoint cuando clickamos en el canvas
 		canvas.setOnMousePressed(event -> {
 			startPoint = new Point(event.getX(), event.getY());
 		});
 
+		//cuando es seleccionado un boton de figuras y se suelta el mouse luego de un click agrega las figuras a la lista de canvas state
+		// y actualiza el canvas
 		canvas.setOnMouseReleased(event -> {
 			Point endPoint = new Point(event.getX(), event.getY());
 			if(startPoint == null) {
@@ -132,6 +138,7 @@ public class PaintPane extends BorderPane {
 			}
 			//si el endpoint es menor o igual al startpoint no se crea la figura
 			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY() || startPoint.equals(endPoint)) {
+				statusPane.updateStatus("Porfavor crear las figuras de arriba a la izquerda hacia abajo a la derecha");
 				return ;
 			}
 			FigureButton[] figureButtons ={ rectangleButton,  squareButton, ellipseButton,circleButton};
@@ -153,6 +160,7 @@ public class PaintPane extends BorderPane {
 			redrawCanvas();
 		});
 
+		// actualiza el satuspane(la barra azul de abajo) con figuras seleccionadas, hover sobre una figura y el punto en el que se encuantra el cursor
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -170,6 +178,8 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//cuando esta seleccionado el boton de select actualiza el paint pane y la variable selected figure para indicar que
+		// tal figura fue seleccionada y usar la variable con los otros botones
 		canvas.setOnMouseClicked(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -192,6 +202,7 @@ public class PaintPane extends BorderPane {
 			}
 		});
 
+		//move la figura seleccinada por el canvas
 		canvas.setOnMouseDragged(event -> {
 			if(selectionButton.isSelected()) {
 				Point eventPoint = new Point(event.getX(), event.getY());
@@ -240,7 +251,7 @@ public class PaintPane extends BorderPane {
 		expandButton.setOnAction(event ->{
 			if(selectedFigure!= null){
 				undoRedo.addUndo(new Agrandar(selectedFigure));
-				selectedFigure.getFigureBack().changeSize(1.1);
+				selectedFigure.getFigureBack().changeSize(AGRANDAR_10);
 				undoRedo.getRedo().clear();
 				undoRedo.changeLabels();
 				redrawCanvas();
@@ -251,7 +262,7 @@ public class PaintPane extends BorderPane {
 		minimizeButton.setOnAction(actionEvent -> {
 			if(selectedFigure!=null){
 				undoRedo.addUndo(new Achicar(selectedFigure));
-				selectedFigure.getFigureBack().changeSize(0.9);
+				selectedFigure.getFigureBack().changeSize(ACHICAR_10);
 				undoRedo.getRedo().clear();
 				undoRedo.changeLabels();
 				redrawCanvas();
