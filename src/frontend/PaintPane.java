@@ -1,6 +1,7 @@
 package frontend;
 
 import backend.CanvasState;
+import backend.Exceptions.DirectionException;
 import backend.model.*;
 import frontend.Instruction.*;
 import frontend.FrontFigure.*;
@@ -16,6 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
+
+import java.util.NoSuchElementException;
 
 
 public class PaintPane extends BorderPane {
@@ -72,7 +75,7 @@ public class PaintPane extends BorderPane {
 	private UndoRedo undoRedo= new UndoRedo();
 
 
-    //maneja lo que es botones, acciones y layout del canvas
+	//maneja lo que es botones, acciones y layout del canvas
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 
 		//esta primera parte es el layout de los botnes y las boxes
@@ -137,9 +140,14 @@ public class PaintPane extends BorderPane {
 				return ;
 			}
 			//si el endpoint es menor o igual al startpoint no se crea la figura
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY() || startPoint.equals(endPoint)) {
-				statusPane.updateStatus("Porfavor crear las figuras de arriba a la izquerda hacia abajo a la derecha");
-				return ;
+			try {
+				if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY() || startPoint.equals(endPoint)) {
+					throw new DirectionException();
+				}
+			}
+			catch(RuntimeException ex) {
+				statusPane.updateStatus(ex.getMessage());
+				return;
 			}
 			FigureButton[] figureButtons ={ rectangleButton,  squareButton, ellipseButton,circleButton};
 
@@ -209,7 +217,7 @@ public class PaintPane extends BorderPane {
 				double diffX = (eventPoint.getX() - startPoint.getX()) / 100;
 				double diffY = (eventPoint.getY() - startPoint.getY()) / 100;
 				if(selectedFigure!=null)
-				     selectedFigure.getFigureBack().move(diffX,diffY);
+					selectedFigure.getFigureBack().move(diffX,diffY);
 				startPoint.movePoint(diffX,diffY);
 				redrawCanvas();
 			}
@@ -270,22 +278,27 @@ public class PaintPane extends BorderPane {
 		});
 
 		undoButton.setOnAction(event->{
-			if(undoRedo.canUndo()) {
+		try {
 				Instruction instruction = undoRedo.undo();
 				instruction.undo();
 				undoRedo.changeLabels();
 				redrawCanvas();
+		}
+		catch(RuntimeException ex){
+				statusPane.updateStatus(ex.getMessage());
 			}
-
 		});
 
 		reDoButton.setOnAction(event->{
-			if(undoRedo.canRedo()) {
+		try {
 				Instruction instruction = undoRedo.redo();
 				instruction.redo();
 				undoRedo.changeLabels();
 				redrawCanvas();
-			}
+		}
+		catch(RuntimeException ex) {
+			statusPane.updateStatus(ex.getMessage());
+		}
 		});
 
 		deleteButton.setOnAction(event -> {
@@ -310,11 +323,11 @@ public class PaintPane extends BorderPane {
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (FrontFigures figure : canvasState.figures()) {
-				if (figure == selectedFigure) {
-					figure.draw(gc, Color.RED);
-				} else {
-					figure.draw(gc);
-				}
+			if (figure == selectedFigure) {
+				figure.draw(gc, Color.RED);
+			} else {
+				figure.draw(gc);
+			}
 		}
 	}
 

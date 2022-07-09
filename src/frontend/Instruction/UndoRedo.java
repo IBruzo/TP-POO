@@ -35,15 +35,23 @@ public class UndoRedo {
 
 // estas funciones se pasan entre si  las instrucciones
     public Instruction undo(){
-        Instruction aux= undo.pop();
+        if(canUndo()) {
+            Instruction aux = undo.pop();
             redo.push(aux);
             return aux;
+        }
+        else
+            throw new NoSuchElementException("No hay operaciones que deshacer");
     }
 
     public Instruction redo(){
-        Instruction aux = redo.pop();
-        undo.push(aux);
-        return aux;
+        if(canRedo()) {
+            Instruction aux = redo.pop();
+            undo.push(aux);
+            return aux;
+        }
+        else
+            throw new NoSuchElementException("No hay operaciones que rehacer");
     }
 
     /**
@@ -57,11 +65,11 @@ public class UndoRedo {
 
 
     //chequeo para ver si se precionan los botones cuando no hay nada que dehacer o reacher
-    public boolean canUndo(){
-        return undo.size()!=0;
+    private boolean canUndo(){
+        return undo.size() != 0;
     }
-    public boolean canRedo(){
-        return redo.size()!=0;
+    private boolean canRedo(){
+        return redo.size() != 0;
     }
 
     //getters
