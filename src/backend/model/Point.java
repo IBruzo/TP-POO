@@ -1,8 +1,10 @@
 package backend.model;
 
-public class Point {
 
-    private double x, y;
+
+public class Point{
+
+    private Double x, y;
 
     public Point(double x, double y) {
         this.x = x;
@@ -22,6 +24,20 @@ public class Point {
         this.y+=y;
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj)
+            return true;
+        if(!(obj instanceof Point))
+            return false;
+        Point other = (Point) obj;
+        return x.equals(other.x) && y.equals(other.y);
+    }
 
     @Override
     public String toString() {

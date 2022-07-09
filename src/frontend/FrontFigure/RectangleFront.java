@@ -20,10 +20,8 @@ public class RectangleFront extends FrontFigures {
         draw(gc,edgeColor);
     }
     public void draw(GraphicsContext gc, Color selected){
-        Rectangle aux = (Rectangle)figureBack;
-        gc.setFill(this.fillColor);
-        gc.setStroke(selected);
-        gc.setLineWidth(edgeWidth);
+        Rectangle aux = (Rectangle) figureBack;
+       changeGraphics(gc, selected);
         gc.fillRect(aux.getTopLeft().getX(), aux.getTopLeft().getY(),
                 Math.abs(aux.getTopLeft().getX() - aux.getBottomRight().getX()), Math.abs(aux.getTopLeft().getY() - aux.getBottomRight().getY()));
         gc.strokeRect(aux.getTopLeft().getX(), aux.getTopLeft().getY(),

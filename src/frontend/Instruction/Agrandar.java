@@ -2,7 +2,7 @@ package frontend.Instruction;
 
 import frontend.FrontFigure.FrontFigures;
 
-public class Agrandar extends Instruction{
+public class Agrandar extends Achicar{
 
     public Agrandar(FrontFigures figureState) {
         super(figureState);
@@ -10,12 +10,12 @@ public class Agrandar extends Instruction{
 
     @Override
     public void undo() {
-        getFigureState().getFigureBack().changeSize(0.9);
+        super.redo();
     }
 
     @Override
     public void redo() {
-        getFigureState().getFigureBack().changeSize(1.1);
+        super.undo();
     }
 
     @Override

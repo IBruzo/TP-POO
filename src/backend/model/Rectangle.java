@@ -18,13 +18,6 @@ public class Rectangle extends Figure {
         return bottomRight;
     }
 
-    public void setTopLeft(Point topLeft) {
-        this.topLeft = topLeft;
-    }
-
-    public void setBottomRight(Point bottomRight) {
-        this.bottomRight = bottomRight;
-    }
 
     @Override
     public String toString() {
@@ -35,12 +28,10 @@ public class Rectangle extends Figure {
        super.setCenterPoint(new Point((bottomRight.getX()-topLeft.getX())/2 + topLeft.getX(), (bottomRight.getY()- topLeft.getY())/2 + topLeft.getY()));
     }
 
-
-
     @Override
     public void move(double diffX,double diffY){
-       setTopLeft(new Point(getTopLeft().getX() + diffX,getTopLeft().getY() + diffY ));
-       setBottomRight(new Point(getBottomRight().getX() + diffX,getBottomRight().getY() + diffY));
+       topLeft.movePoint(diffX,diffY);
+       bottomRight.movePoint(diffX,diffY);
        setCenterPoint(getTopLeft(),getBottomRight());
     }
 

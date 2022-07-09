@@ -19,4 +19,8 @@ public class Circle extends Ellipse {
         return super.getsMayorAxis();
     }
 
+    @Override
+    public boolean isInFigure(Point eventPoint) {
+        return pointInArea(eventPoint) <= 1.0;
+    }
 }

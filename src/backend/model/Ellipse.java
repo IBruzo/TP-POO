@@ -32,10 +32,14 @@ public class Ellipse extends Figure {
         setCenterPoint(new Point(getCenterPoint().getX()+diffX,getCenterPoint().getY()+diffY));
     }
 
+    protected double pointInArea(Point eventPoint){
+        return (Math.pow(eventPoint.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
+                (Math.pow(eventPoint.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2));
+    }
+
     @Override
     public boolean isInFigure(Point eventPoint) {
-        return ((Math.pow(eventPoint.getX() - getCenterPoint().getX(), 2) / Math.pow(getsMayorAxis(), 2)) +
-                (Math.pow(eventPoint.getY() - getCenterPoint().getY(), 2) / Math.pow(getsMinorAxis(), 2))) <= 0.30;
+        return (pointInArea(eventPoint)) <= 0.3;
     }
 
     @Override

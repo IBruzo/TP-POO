@@ -3,23 +3,21 @@ package frontend.Instruction;
 import backend.CanvasState;
 import frontend.FrontFigure.FrontFigures;
 
-public class Borrar extends Instruction{
+public class Borrar extends Dibujar{
 
-    private CanvasState state;
 
     public Borrar(FrontFigures figureState, CanvasState state) {
-        super(figureState);
-        this.state=state;
+        super(figureState,state);
     }
 
     @Override
     public void undo() {
-        state.setFigure(getFigureState().getIndex(), getFigureState());
+        super.redo();
     }
 
     @Override
     public void redo() {
-        state.deleteFigure(getFigureState());
+        super.undo();
     }
 
     @Override

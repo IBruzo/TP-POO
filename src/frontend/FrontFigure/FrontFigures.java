@@ -4,6 +4,8 @@ import javafx.scene.paint.Color;
 import backend.model.Figure;
 
 public abstract class FrontFigures {
+
+    //elementos que describen a una figura que va a ser dibujada
     protected final Figure figureBack;
     protected Color fillColor;
     protected Color edgeColor;
@@ -18,8 +20,44 @@ public abstract class FrontFigures {
         this.index=index;
     }
 
-    //TODO metodo default para no repetir tanto codigo en los draw
-    // (me genera desconfiaza no poder usar el draw del rectangulo para el draw del cuadrado -Bruzo)
+    /**
+     * sirve para no ir repitiendo codigo en cada una de las figuras de front
+     * @param gc
+     * @param selected
+     */
+
+    public void changeGraphics(GraphicsContext gc, Color selected){
+        gc.setFill(this.fillColor);
+        gc.setStroke(selected);
+        gc.setLineWidth(edgeWidth);
+    }
+
+    /**
+     * dibuja las figuras y las rellena dependiendo la forma y el color
+     * el metodo es sobrecargado para poder tomar el caso especial cuando la figura esta seleccionada
+     * @param gc
+     * @param selected
+     */
+    public  abstract void draw(GraphicsContext gc, Color selected);
+
+    public abstract void draw(GraphicsContext gc);
+
+
+
+    //getters y setters de los elementos que lee el front
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+    }
+
+    public void setEdgeColor(Color edgeColor) {
+        this.edgeColor = edgeColor;
+    }
+
+    public void setEdgeWidth(Double edgeWidth) {
+        this.edgeWidth = edgeWidth;
+    }
+
 
     public Figure getFigureBack() {
         return figureBack;
@@ -35,21 +73,6 @@ public abstract class FrontFigures {
 
     public int getIndex() {
         return index;
-    }
-
-    public  abstract void draw(GraphicsContext gc, Color selected);
-    public abstract void draw(GraphicsContext gc);
-
-    public void setFillColor(Color fillColor) {
-        this.fillColor = fillColor;
-    }
-
-    public void setEdgeColor(Color edgeColor) {
-        this.edgeColor = edgeColor;
-    }
-
-    public void setEdgeWidth(Double edgeWidth) {
-        this.edgeWidth = edgeWidth;
     }
 
 }

@@ -17,18 +17,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.*;
 
-//TODO chequear los ifs
 
 public class PaintPane extends BorderPane {
 
-
-
 	// BackEnd
-	CanvasState canvasState;
+	private final CanvasState canvasState;
 
 	// Canvas y relacionados
-	Canvas canvas = new Canvas(800, 600);
-	GraphicsContext gc = canvas.getGraphicsContext2D();
+	private final Canvas canvas = new Canvas(800, 600);
+	private final GraphicsContext gc = canvas.getGraphicsContext2D();
 	private static final Color LINE_COLOR = Color.BLACK;
 	private static final Color FILL_COLOR = Color.YELLOW;
 	private static final int DEF_MIN_SLIDER = 1;
@@ -36,47 +33,45 @@ public class PaintPane extends BorderPane {
 	private static final int DEF_INCREMENT_SLIDER = 1;
 
 	// Botones Barra Izquierda
-	ToggleButton selectionButton = new ToggleButton("Seleccionar");
-	FigureButton rectangleButton = new RectangleButton("Rectángulo");
-	FigureButton circleButton = new CircleButton("Círculo");
-	FigureButton squareButton = new SquareButton("Cuadrado");
-	FigureButton ellipseButton = new EllipseButton("Elipse");
-	ToggleButton deleteButton = new ToggleButton("Borrar");
-	Button expandButton = new Button("Agrandar");
-	Button minimizeButton = new Button("Achicar");
+	private final ToggleButton selectionButton = new ToggleButton("Seleccionar");
+	private final FigureButton rectangleButton = new RectangleButton("Rectángulo");
+	private final FigureButton circleButton = new CircleButton("Círculo");
+	private final FigureButton squareButton = new SquareButton("Cuadrado");
+	private final FigureButton ellipseButton = new EllipseButton("Elipse");
+	private final ToggleButton deleteButton = new ToggleButton("Borrar");
+	private final Button expandButton = new Button("Agrandar");
+	private final Button minimizeButton = new Button("Achicar");
 
 	//Slider Grosor de Borde
-	Text sliderText = new Text("Borde");
-	Slider slider = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
+	private  final Text sliderText = new Text("Borde");
+	private final Slider slider = new Slider(DEF_MIN_SLIDER, DEF_MAX_SLIDER, DEF_INCREMENT_SLIDER);
 
 	//Colorpickers
-	ColorPicker edgePicker = new ColorPicker(LINE_COLOR);
-	Text fillText = new Text("Relleno");
-	ColorPicker fillPicker = new ColorPicker(FILL_COLOR);
-
-
+	private final ColorPicker edgePicker = new ColorPicker(LINE_COLOR);
+	private final Text fillText = new Text("Relleno");
+	private final ColorPicker fillPicker = new ColorPicker(FILL_COLOR);
 
 	//botonoes barra arriba
-	Button undoButton = new Button("Deshacer");
-	Button reDoButton= new Button("Rehacer");
+	private final Button undoButton = new Button("Deshacer");
+	private final Button reDoButton= new Button("Rehacer");
 
 	// Dibujar una figura
-	Point startPoint;
+	private Point startPoint;
 
 	// Seleccionar una figura
-	FrontFigures selectedFigure;
+	private FrontFigures selectedFigure;
 
 	// StatusBar
-	StatusPane statusPane;
+	private StatusPane statusPane;
 
-	UndoRedo undoRedo= new UndoRedo();
+	private UndoRedo undoRedo= new UndoRedo();
 
 
 
 	public PaintPane(CanvasState canvasState, StatusPane statusPane) {
 		this.canvasState = canvasState;
 		this.statusPane = statusPane;
-		ToggleButton[] toolsArr = {selectionButton, rectangleButton, circleButton, squareButton, ellipseButton, deleteButton};
+		ToggleButton[] toolsArr = {selectionButton, rectangleButton,  squareButton, ellipseButton,circleButton, deleteButton};
 		ToggleGroup tools = new ToggleGroup();
 		for (ToggleButton tool : toolsArr) {
 			tool.setMinWidth(90);
@@ -135,10 +130,11 @@ public class PaintPane extends BorderPane {
 			if(startPoint == null) {
 				return ;
 			}
-			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY()) {
+			//si el endpoint es menor o igual al startpoint no se crea la figura
+			if(endPoint.getX() < startPoint.getX() || endPoint.getY() < startPoint.getY() || startPoint.equals(endPoint)) {
 				return ;
 			}
-			FigureButton[] figureButtons ={ rectangleButton, circleButton, squareButton, ellipseButton};
+			FigureButton[] figureButtons ={ rectangleButton,  squareButton, ellipseButton,circleButton};
 
 			FrontFigures newFigure=null;
 			for(FigureButton button : figureButtons ){
@@ -156,7 +152,7 @@ public class PaintPane extends BorderPane {
 			startPoint = null;
 			redrawCanvas();
 		});
-  //TODO sacar el flag muy imperativo
+
 		canvas.setOnMouseMoved(event -> {
 			Point eventPoint = new Point(event.getX(), event.getY());
 			boolean found = false;
@@ -207,6 +203,10 @@ public class PaintPane extends BorderPane {
 				redrawCanvas();
 			}
 		});
+
+
+		//las siguientes funciones cambian las figuras de front y sus valores
+		// tambien si la instruccion se puede deshacer se guarda en el stack de undo y borrra el redo
 
 		fillPicker.setOnAction(e->{
 			if(selectedFigure!=null) {
@@ -265,6 +265,7 @@ public class PaintPane extends BorderPane {
 				undoRedo.changeLabels();
 				redrawCanvas();
 			}
+
 		});
 
 		reDoButton.setOnAction(event->{
@@ -292,6 +293,9 @@ public class PaintPane extends BorderPane {
 		setRight(canvas);
 	}
 
+	/**
+	 * esta funcion se usa para poder actualizar el canvas cuando se ejecuta alguna de las instruccion o acciones
+	 */
 	void redrawCanvas() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		for (FrontFigures figure : canvasState.figures()) {
